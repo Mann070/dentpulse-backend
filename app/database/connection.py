@@ -7,9 +7,12 @@ settings = get_settings()
 
 # Convert sync URL to async if needed (e.g., postgresql -> postgresql+asyncpg)
 DATABASE_URL = settings.DATABASE_URL
-if DATABASE_URL.startswith("postgresql://"):
-    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
-elif not DATABASE_URL:
+if DATABASE_URL:
+    if DATABASE_URL.startswith("postgresql://"):
+        DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+    elif DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+else:
     DATABASE_URL = "sqlite+aiosqlite:///./dentpulse.db"
 
 # Async Engine for high-performance clinical data handling
